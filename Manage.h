@@ -14,6 +14,7 @@ public:
 	void T(string expr,int& count,int& err);
 	void F(string expr,int& count,int& err);
 	void ConvertPostfix(string expr);
+	string ComputePostfix(vector<string>&output);
 	void HybridOperation();
 	int prior(string opt);
 	bool isOperator(string str);

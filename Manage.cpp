@@ -24,6 +24,8 @@ void Manage::HybridOperation()
 		if(err == 1){
 			//進入計算部分，先將中綴表達式轉化爲後綴表達式
 			ConvertPostfix(expr);
+			//最後一步:計算後綴表達式的值
+			cout << expr << " = " << ComputePostfix(output) << endl;
 			cout<<"運算成功！是否繼續運算(y/n):";
 			cin >> reply;
 			if(reply != 'y')
@@ -128,22 +130,22 @@ void Manage::F(string expr,int& count,int& err)
 		if(flag)
 			count--;
 			***************************/
-		if((expr[count] >='A' && expr[count] <= 'Z') ||(expr[count] >= 'a' && expr[count] <= 'z'))
-		{
+	if((expr[count] >='A' && expr[count] <= 'Z') ||(expr[count] >= 'a' && expr[count] <= 'z'))
+	{
+		count++;
+		if(expr[count] == '!')
 			count++;
-			if(expr[count] == '!')
-				count++;
-		}
+	}
 		/*******************************
 		if(expr[count] != '+' && expr[count] != '*' && expr[count] != ')')
 		{
 			err = -1;
 			return;
 		}*******************************/
-		else{
-			err = -1;
-			return;
-		}
+	else{
+		err = -1;
+		return;
+	}
 	return;
 }
 void Manage::WordAndType()
@@ -192,6 +194,8 @@ int Manage::prior(string opt)
 void Manage::ConvertPostfix(string expr)
 {
 	//vector<string>output:後綴表達式
+	//每次都先做一下清空
+	output.clear();
 	string tmp;
 	stack<string>s;
 	for(int i = 0;i < expr.size();i++)
@@ -238,12 +242,16 @@ void Manage::ConvertPostfix(string expr)
 	}
 	while(!s.empty()){
 		output.push_back(s.top());
-		s.top();
+		s.pop();
 	}
 	//輸出看看對不對
 	vector<string>::iterator it;
 	for(it = output.begin();it!=output.end();it++)
 		cout << *it;
+}
+string ComputePostfix(vector<string>&output)
+{
+
 }
 void Manage::input()
 {
