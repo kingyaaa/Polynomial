@@ -4,6 +4,6 @@ int main()
 {
 	Manage m;
 	m.input();
-	m.check();
+	m.HybridOperation();
 	return 0;
 }

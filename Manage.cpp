@@ -24,8 +24,9 @@ void Manage::HybridOperation()
 		if(err == 1){
 			//進入計算部分，先將中綴表達式轉化爲後綴表達式
 			ConvertPostfix(expr);
+			cout << endl;
 			//最後一步:計算後綴表達式的值
-			cout << expr << " = " << ComputePostfix(output) << endl;
+			//cout << expr << " = " << ComputePostfix(output) << endl;
 			cout<<"運算成功！是否繼續運算(y/n):";
 			cin >> reply;
 			if(reply != 'y')
@@ -73,11 +74,13 @@ void Manage::F(string expr,int& count,int& err)
 		count++;
 		if(expr[count] == '['){
 			count++;
-			if(expr[count] >='0' && expr[count] <= '9'){
-				if(expr[++count] == ','){
+			if((expr[count] >='0' && expr[count] <= '9') || expr[count] == '.'){
+				isDouble(expr,count);
+				if(expr[count] == ','){
 					count++;
-					if(expr[count] >= '0' && expr[count] <= '9'){
-						if(expr[++count] == ']'){
+					if((expr[count] >= '0' && expr[count] <= '9') || expr[count] == '.'){
+						isDouble(expr,count);
+						if(expr[count] == ']'){
 							count++;
 							E(expr,count,err);
 						}
@@ -107,10 +110,10 @@ void Manage::F(string expr,int& count,int& err)
 		}
 		return;
 	}
-	/*********************************
 	if((expr[count] >='A' && expr[count] <= 'Z') ||(expr[count] >= 'a' && expr[count] <= 'z'))
 	{
 		string tmp;
+		tmp.clear();
 		tmp.push_back(expr[count]);
 		count++;
 		int flag = 0;
@@ -127,15 +130,15 @@ void Manage::F(string expr,int& count,int& err)
 			err = -1;
 			return;
 		}
-		if(flag)
-			count--;
-			***************************/
-	if((expr[count] >='A' && expr[count] <= 'Z') ||(expr[count] >= 'a' && expr[count] <= 'z'))
-	{
-		count++;
 		if(expr[count] == '!')
 			count++;
 	}
+	//if((expr[count] >='A' && expr[count] <= 'Z') ||(expr[count] >= 'a' && expr[count] <= 'z'))
+	//{
+	//	count++;
+	//	if(expr[count] == '!')
+	//		count++;
+	//}
 		/*******************************
 		if(expr[count] != '+' && expr[count] != '*' && expr[count] != ')')
 		{
@@ -147,6 +150,49 @@ void Manage::F(string expr,int& count,int& err)
 		return;
 	}
 	return;
+}
+bool Manage::isDouble(string expr,int& i)
+{
+	string tmp;
+	if(expr[i] >= '0' && expr[i] <= '9'){
+		while(expr[i] >= '0' && expr[i] <= '9'){
+			tmp.push_back(expr[i]);
+			++i;
+		}
+		if(expr[i] == '.'){
+			tmp.push_back(expr[i]);
+			++i;
+			//以 , 結尾
+			if(expr[i] == ',' || expr[i] == ']'){
+				//tmp.push_back('0');
+				return true;
+			}
+			if(expr[i] >= '0' && expr[i] <= '9'){
+				while(expr[i] >= '0' &&  expr[i] <= '9'){
+					tmp.push_back(expr[i]);
+					++i;
+				}
+			}
+		}
+		//檢測這個小數跟介於[ 和 ,之間的字符段有沒有不一樣
+		//todo
+		//if(isRealDouble())
+		//	return true;
+		//else
+		//	return false;
+	}
+	//以 . 開頭
+	if(expr[i] == '.'){
+		//tmp.push_back('0');
+		tmp.push_back(expr[i]);
+		++i;
+		if(expr[i] >= '0' && expr[i] <= '9'){
+			while(expr[i] >= '0' && expr[i] <= '9'){
+				tmp.push_back(expr[i]);
+				++i;
+			}
+		}
+	}
 }
 void Manage::WordAndType()
 {

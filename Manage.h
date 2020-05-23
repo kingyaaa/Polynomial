@@ -17,6 +17,7 @@ public:
 	string ComputePostfix(vector<string>&output);
 	void HybridOperation();
 	int prior(string opt);
+	bool isDouble(string expr,int& i);
 	bool isOperator(string str);
 	bool isOperand(string str);
 	void WordAndType();
