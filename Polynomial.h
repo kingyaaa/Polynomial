@@ -24,51 +24,6 @@ public:
 	Polynomial derivative();
 	Polynomial integral(const double a,const double b);
 	void set(double p_ce,int i);
-	friend ostream &operator << (ostream &output,const Polynomial &p)
-	{
-		if(p.size == 1){
-			output << p.ce[0];
-			return output;
-		}
-		if(p.size == 2){
-			if(p.ce[0] != 0 && p.ce[0] != 1)
-				output << p.ce[0] << "x";
-			if(p.ce[0] == 1)
-				output << "x";
-		}
-		if(p.size > 2){
-			if(p.ce[0] != 1 && p.ce[0] != 0)
-				output << p.ce[0] << "x^" << p.ex[0];
-			if(p.ce[0] == 1)
-				output << "x^" << p.ex[0];
-		}
-		for(int i = 1;i < p.size;i++){
-			if(p.ce[i] == 0)
-				continue;
-			if(p.ex[i] > 1){
-				if(p.ce[i] > 1)
-					output << "+" << p.ce[i] <<"x^" << p.ex[i];
-				if(p.ce[i] == 1)
-					output << "+" << "x^"<< p.ex[i];
-				if(p.ce[i] < 0)
-					output << p.ce[i] << "x^" << p.ex[i];
-			}
-			if(p.ex[i] == 1){
-				if(p.ce[i] > 1)
-					output << "+" << p.ce[i] << "x";
-				if(p.ce[i] == 1)
-					output << "+x";
-				if(p.ce[i] < 1)
-					output << p.ce[i] << "x";
-			}
-			if(p.ex[i] == 0){
-				if(p.ce[i] > 0)
-					output << "+" << p.ce[i];
-				if(p.ce[i] < 0)
-					output << p.ce[i];
-			}
-		}
-		return output;
-	}
+	friend ostream& operator << (ostream& output,const Polynomial& p);
 	~Polynomial();
 };

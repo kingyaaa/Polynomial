@@ -55,6 +55,7 @@ Polynomial& Polynomial::operator = (const Polynomial& p)
 	}
 	return *this;
 }
+/*
 Polynomial Polynomial::operator + (const Polynomial& p)
 {
 	int sum_size = size + p.size;
@@ -87,14 +88,39 @@ Polynomial Polynomial::operator + (const Polynomial& p)
 	}
 	Polynomial tmp(sum_ce,sum_ex,count);
 	return tmp;
+}*/
+Polynomial Polynomial::operator + (const Polynomial& p)
+{
+	if(size >= p.size){
+		Polynomial sum = *this;
+		for(int i = 0; i < p.size;i++){
+			for(int j = 0; j < size;j++){
+				if(sum.ex[j] == p.ex[i])
+					sum.ce[j] += p.ce[i];
+			}
+		}
+		return sum;
+	}
+	else{
+		Polynomial sum = p;
+		for(int i = 0;i < size;i++){
+			for(int j = 0;j < p.size;j++){
+				if(sum.ex[j] == ex[i])
+					sum.ce[j] += ce[i];
+			}
+		}
+		return sum;
+	}
 }
 Polynomial Polynomial::operator * (const Polynomial& p)
 {
 	Polynomial temp = *this;
 	int sum_size = temp.ex[0] + p.ex[0] + 1;
 	Polynomial sum(sum_size);
-	for(int i = 0; i < sum_size;i++)
+	for(int i = 0; i < sum_size;i++){
 		sum.ex[i] = sum.size - 1 - i;
+		sum.ce[i] = 0;
+	}
 	for(int i = 0;i < p.size;i++){
 		for(int j = 0;j < size;j++){
 			sum.ce[i+j] += ce[j] * p.ce[i];
@@ -106,6 +132,12 @@ Polynomial Polynomial::operator * (const Polynomial& p)
 Polynomial Polynomial::derivative()
 {
 	Polynomial p = *this;
+	if(p.size == 1){
+		Polynomial A(1);
+		A.ex[0] = 0;
+		A.ce[0] = 0;
+		return A;
+	}
 	Polynomial temp(p.size - 1);
 	for(int i = 0;i < p.size - 1;i++){
 		temp.ex[i] = p.ex[i] - 1;
@@ -131,5 +163,59 @@ Polynomial::~Polynomial()
 {
 	delete ce;
 	delete ex;
+}
+ostream &operator << (ostream &output,const Polynomial &p)
+{
+	if(p.size == 1){
+		output << p.ce[0];
+		return output;
+	}
+	if(p.size == 2){
+		if(p.ce[0] != 0 && p.ce[0] != 1 && p.ce[0] != -1)
+			output << p.ce[0] << "x";
+		if(p.ce[0] == 1)
+			output << "x";
+		if(p.ce[0] == -1)
+			output << "-x";
+	}
+	if(p.size > 2){
+		if(p.ce[0] != 1 && p.ce[0] != 0 && p.ce[0] != -1)
+			output << p.ce[0] << "x^" << p.ex[0];
+		if(p.ce[0] == 1)
+			output << "x^" << p.ex[0];
+		if(p.ce[0] == -1)
+			output << "-x^" << p.ex[0];
+	}
+	for(int i = 1;i < p.size;i++){
+		if(p.ce[i] == 0)				   
+			continue;
+		if(p.ex[i] > 1){
+			if(p.ce[i] > 1)
+				output << "+" << p.ce[i] <<"x^" << p.ex[i];
+			if(p.ce[i] == 1)
+				output << "+" << "x^"<< p.ex[i];
+			if(p.ce[i] < 0 && p.ce[i] != -1)
+				output << p.ce[i] << "x^" << p.ex[i];
+			if(p.ce[i] == -1)
+				output << "-x^" << p.ex[i];
+		}
+		if(p.ex[i] == 1){					 
+			if(p.ce[i] > 1)
+				output << "+" << p.ce[i] << "x";
+			if(p.ce[i] == 1)
+				output << "+x";
+			if(p.ce[i] < 1 && p.ce[i] != -1)
+				output << p.ce[i] << "x";
+			if(p.ce[i] == -1)
+				output << "-x";
+		}
+		if(p.ex[i] == 0){
+			if(p.ce[i] > 0)
+				output << "+" << p.ce[i];
+            if(p.ce[i] < 0)
+				output << p.ce[i];
+		}	
+	}
+	return output;
 }
 

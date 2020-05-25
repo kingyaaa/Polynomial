@@ -23,18 +23,22 @@ void Manage::choose()
 void Manage::HybridOperation()
 {
 	bool op = true;
-	char reply;
+	string reply;
 	while(op){
 		cout << "請輸入表達式:";
 		string expr;
 		cin >> expr;
 		int count = 0;
 		int err = 1;
-		E(expr,count,err);
+		while(count != expr.size()){
+			if(err == -1)
+				break;
+			E(expr,count,err);
+		}
 		if(err == -1){
 			cout << "表達式錯誤，是否重新輸入(y/n):";
 			cin >> reply;
-			if(reply != 'y')
+			if(reply != "y" && reply != "Y")
 				op = false;
 		}
 		if(err == 1){
@@ -46,7 +50,7 @@ void Manage::HybridOperation()
 			
 			cout<<"運算成功！是否繼續運算(y/n):";
 			cin >> reply;
-			if(reply != 'y')
+			if(reply != "y" && reply != "Y")
 				op = false;
 		}
 	}
@@ -356,7 +360,7 @@ void Manage::popTwoOperand(stack<Polynomial>&s,Polynomial& first,Polynomial& sec
 //計算後綴表達式，返回一個結果(多項式)
 Polynomial Manage::ComputePostfix(vector<string>&output)
 {
-	Polynomial fir,sec;
+	//Polynomial fir,sec;
 	map<string,Polynomial>::iterator pv;  //search//找到string對應的對象
 	stack<Polynomial>s;
 	vector<string>::iterator it;
@@ -368,20 +372,24 @@ Polynomial Manage::ComputePostfix(vector<string>&output)
 			s.push(pv->second);
 		}
 		if((*it) == "+"){
+			Polynomial fir,sec;
 			popTwoOperand(s,fir,sec);
 			s.push(fir + sec);
 		}
 		if((*it) == "*"){
+			Polynomial fir,sec;
 			popTwoOperand(s,fir,sec);
 			s.push(fir * sec);
 		}
 		if((*it) == "!"){
+			Polynomial fir;
 			fir = s.top();
 			s.pop();
 			Polynomial tmp = fir.derivative();
 			s.push(tmp);//求導，返回一個新的多項式對象
 		}
 		if((*it)[0] == '$'){
+			Polynomial fir;
 			double a,b;
 			getTwodouble(*it,a,b);
 			fir = s.top();
@@ -407,7 +415,7 @@ void Manage::getTwodouble(string str,double& a,double& b)
 	int i = 2,flag = 1;
 	while(str[i] != ',')
 	{
-		if(str[2] == '.' && flag){
+		if(str[i] == '.' && flag){
 			tmp1.push_back('0');
 			tmp1.push_back('.');
 			i++;
@@ -426,16 +434,17 @@ void Manage::getTwodouble(string str,double& a,double& b)
 	}
 	a = stringToDouble(tmp1);
 	i++;
+	int index = i;
 	flag = 1;
 	while(str[i] != ']')
 	{
-		if(str[2] == '.'&& flag){
+		if(str[index] == '.'&& flag){
 			tmp2.push_back('0');
 		    tmp2.push_back('.');			
 			i++;
 			flag = 0;
          }
-         else if(str[i] == '.'&& str[i+1] == ',')
+         else if(str[i] == '.'&& str[i+1] == ']')
          {    
 			 tmp2.push_back('.');
              tmp2.push_back('0');
@@ -477,9 +486,9 @@ void Manage::input()
 		 }
 		 search.insert(pair<string,Polynomial>(p_name,p));
 		 cout << "輸入成功，是否繼續輸入(y/n):";
-	 	 char reply;
+	 	 string reply;
 		 cin >> reply;
-         if(reply != 'y'){
+         if(reply != "y"&& reply != "Y"){
              in = false;
          }
 	 }
