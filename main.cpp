@@ -3,7 +3,6 @@
 int main()
 {
 	Manage m;
-	m.input();
-	m.HybridOperation();
+	m.choose();
 	return 0;
 }

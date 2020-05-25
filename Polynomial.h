@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<cmath>
+#include<sstream>
 #include<map>
 #include<vector>
 #include<stack>
@@ -13,8 +14,11 @@ private:
 	double *ce;//系數
 	int *ex;//指數
 public:
+	Polynomial();//默認構造函數
 	Polynomial(int max_size);//構造函數
+	Polynomial(const double c[],const int x[],const int n);
 	Polynomial(const Polynomial& p);//拷貝構造函數
+	Polynomial& operator = (const Polynomial& p);
 	Polynomial operator + (const Polynomial& p);
 	Polynomial operator * (const Polynomial& p);
 	Polynomial derivative();
@@ -27,11 +31,18 @@ public:
 			return output;
 		}
 		if(p.size == 2){
-			output << p.ce[0] << "x";
+			if(p.ce[0] != 0 && p.ce[0] != 1)
+				output << p.ce[0] << "x";
+			if(p.ce[0] == 1)
+				output << "x";
 		}
-		if(p.size > 2)
-			output << p.ce[0] << "x^" << p.ex[0];
-	    for(int i = 1;i < p.size;i++){
+		if(p.size > 2){
+			if(p.ce[0] != 1 && p.ce[0] != 0)
+				output << p.ce[0] << "x^" << p.ex[0];
+			if(p.ce[0] == 1)
+				output << "x^" << p.ex[0];
+		}
+		for(int i = 1;i < p.size;i++){
 			if(p.ce[i] == 0)
 				continue;
 			if(p.ex[i] > 1){
@@ -46,7 +57,7 @@ public:
 				if(p.ce[i] > 1)
 					output << "+" << p.ce[i] << "x";
 				if(p.ce[i] == 1)
-					output << "x";
+					output << "+x";
 				if(p.ce[i] < 1)
 					output << p.ce[i] << "x";
 			}
